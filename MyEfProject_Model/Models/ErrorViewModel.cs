@@ -1,6 +1,6 @@
 using System;
 
-namespace MyEfProject.Models
+namespace MyEfProject_Model.Models
 {
     public class ErrorViewModel
     {

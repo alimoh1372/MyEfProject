@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MyEfProject.Models;
+using MyEfProject_Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
