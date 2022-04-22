@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace MyEfProject_Model.Models
 {
-    public class Publisher
+    public class Fluent_Publisher
     {
-        [Key]
+       
         public int Publisher_Id { get; set; }
-        [Required]
-        [MaxLength(400)]
+      
         public string Name { get; set; }
-        [Required]
+       
         public string Location { get; set; }
 
-        public ICollection<Book>     Books { get; set; }
+        public ICollection<Fluent_Book> Fluent_Books { get; set; }
+
     }
 }

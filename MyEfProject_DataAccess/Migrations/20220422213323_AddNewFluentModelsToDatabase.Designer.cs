@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyEfProject_DataAccess.Data;
 
 namespace MyEfProject_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220422213323_AddNewFluentModelsToDatabase")]
+    partial class AddNewFluentModelsToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,6 +77,12 @@ namespace MyEfProject_DataAccess.Migrations
                     b.Property<int>("Category_Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Fluent_CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Fluent_PublisherPublisher_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -97,6 +105,10 @@ namespace MyEfProject_DataAccess.Migrations
                         .IsUnique();
 
                     b.HasIndex("Category_Id");
+
+                    b.HasIndex("Fluent_CategoryId");
+
+                    b.HasIndex("Fluent_PublisherPublisher_Id");
 
                     b.HasIndex("Publisher_Id");
 
@@ -168,26 +180,6 @@ namespace MyEfProject_DataAccess.Migrations
                     b.ToTable("FluentAutorTable");
                 });
 
-            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_AuthorBook", b =>
-                {
-                    b.Property<int>("FkAuthor_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FkBook_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Book_Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("FkAuthor_Id", "FkBook_Id");
-
-                    b.HasIndex("Book_Id");
-
-                    b.HasIndex("FkBook_Id");
-
-                    b.ToTable("Fluent_AuthorBooks");
-                });
-
             modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Book", b =>
                 {
                     b.Property<int>("Book_Id")
@@ -195,10 +187,10 @@ namespace MyEfProject_DataAccess.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("FluentBookDetail_Id")
+                    b.Property<int?>("BookDetail_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Fluent_PublisherFkId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("ISBN")
@@ -209,6 +201,9 @@ namespace MyEfProject_DataAccess.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int?>("Publisher_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Tittle")
                         .IsRequired()
                         .HasMaxLength(400)
@@ -216,10 +211,11 @@ namespace MyEfProject_DataAccess.Migrations
 
                     b.HasKey("Book_Id");
 
-                    b.HasIndex("FluentBookDetail_Id")
-                        .IsUnique();
+                    b.HasIndex("BookDetail_Id");
 
-                    b.HasIndex("Fluent_PublisherFkId");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("Publisher_Id");
 
                     b.ToTable("Fluent_Books");
                 });
@@ -231,6 +227,9 @@ namespace MyEfProject_DataAccess.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int?>("Book_Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfChapters")
                         .HasColumnType("int");
 
@@ -241,6 +240,8 @@ namespace MyEfProject_DataAccess.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("BookDetail_Id");
+
+                    b.HasIndex("Book_Id");
 
                     b.ToTable("Fluent_BookDetails");
                 });
@@ -357,6 +358,14 @@ namespace MyEfProject_DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyEfProject_Model.Models.Fluent_Category", null)
+                        .WithMany("Books")
+                        .HasForeignKey("Fluent_CategoryId");
+
+                    b.HasOne("MyEfProject_Model.Models.Fluent_Publisher", null)
+                        .WithMany("Books")
+                        .HasForeignKey("Fluent_PublisherPublisher_Id");
+
                     b.HasOne("MyEfProject_Model.Models.Publisher", "Publisher")
                         .WithMany("Books")
                         .HasForeignKey("Publisher_Id")
@@ -370,51 +379,34 @@ namespace MyEfProject_DataAccess.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_AuthorBook", b =>
-                {
-                    b.HasOne("MyEfProject_Model.Models.Book", null)
-                        .WithMany("Fluent_AuthorBooks")
-                        .HasForeignKey("Book_Id");
-
-                    b.HasOne("MyEfProject_Model.Models.Fluent_Author", "Fluent_Author")
-                        .WithMany("Fluent_AuthorBooks")
-                        .HasForeignKey("FkAuthor_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyEfProject_Model.Models.Fluent_Book", "Fluent_Book")
-                        .WithMany("Fluent_AuthorBooks")
-                        .HasForeignKey("FkBook_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Fluent_Author");
-
-                    b.Navigation("Fluent_Book");
-                });
-
             modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Book", b =>
                 {
-                    b.HasOne("MyEfProject_Model.Models.Fluent_BookDetail", "Fluent_BookDetail")
-                        .WithOne("Fluent_Book")
-                        .HasForeignKey("MyEfProject_Model.Models.Fluent_Book", "FluentBookDetail_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("MyEfProject_Model.Models.BookDetail", "BookDetail")
+                        .WithMany()
+                        .HasForeignKey("BookDetail_Id");
 
-                    b.HasOne("MyEfProject_Model.Models.Fluent_Publisher", "Fluent_Publisher")
-                        .WithMany("Fluent_Books")
-                        .HasForeignKey("Fluent_PublisherFkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("MyEfProject_Model.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
 
-                    b.Navigation("Fluent_BookDetail");
+                    b.HasOne("MyEfProject_Model.Models.Publisher", "Publisher")
+                        .WithMany()
+                        .HasForeignKey("Publisher_Id");
 
-                    b.Navigation("Fluent_Publisher");
+                    b.Navigation("BookDetail");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("MyEfProject_Model.Models.Book", b =>
+            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_BookDetail", b =>
                 {
-                    b.Navigation("Fluent_AuthorBooks");
+                    b.HasOne("MyEfProject_Model.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("Book_Id");
+
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("MyEfProject_Model.Models.BookDetail", b =>
@@ -427,24 +419,14 @@ namespace MyEfProject_DataAccess.Migrations
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Author", b =>
+            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Category", b =>
                 {
-                    b.Navigation("Fluent_AuthorBooks");
-                });
-
-            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Book", b =>
-                {
-                    b.Navigation("Fluent_AuthorBooks");
-                });
-
-            modelBuilder.Entity("MyEfProject_Model.Models.Fluent_BookDetail", b =>
-                {
-                    b.Navigation("Fluent_Book");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("MyEfProject_Model.Models.Fluent_Publisher", b =>
                 {
-                    b.Navigation("Fluent_Books");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("MyEfProject_Model.Models.Publisher", b =>

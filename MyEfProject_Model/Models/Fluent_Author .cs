@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace MyEfProject_Model.Models
 {
-    public class Author
+    public class Fluent_Author
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public int Author_Id { get; set; }
-        [Required]
-        [MaxLength(400)]
+       
         public string FirstName { get; set; }
-        [Required]
-        [MaxLength(400)]
+       
         public string LastName { get; set; }
-        [Required]
+        
         public DateTime BirthDate { get; set; }
         public string Location { get; set; }
 
-        [NotMapped]
+       
         public string FullName { get; set; }
+
+        public ICollection<Fluent_AuthorBook> Fluent_AuthorBooks { get; set; }
 
     }
 }

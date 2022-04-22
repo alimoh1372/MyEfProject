@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyEfProject_Model.Models
 {
-    public class Category
+    public class Fluent_Category
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }
-        public List<Book> Books { get; set; }
-
-        
-
     }
 }
