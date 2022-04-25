@@ -22,7 +22,9 @@ namespace MyEfProject_Model.Models
         public double Price { get; set; }
        
         public string PriceRange { get; set; }
-        public int FluentBookDetail_Id { get; set; }
+
+
+        public int FkFluentBookDetail_Id { get; set; }
 
         public Fluent_BookDetail Fluent_BookDetail { get; set; }
 
